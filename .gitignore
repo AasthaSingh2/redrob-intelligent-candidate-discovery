@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.pyo
+
+candidates.jsonl
+candidates.jsonl.gz
+
+*.zip
+
+.env
+
+.vscode/
+
+.idea/
