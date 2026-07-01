@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Redrob Intelligent Candidate Discovery — v3
+Redrob Intelligent Candidate Discovery — 
 ==============================================
 Job: Senior AI Engineer — Founding Team @ Redrob AI
 
