@@ -30,6 +30,30 @@ Each candidate receives:
 
 ---
 
+# System Workflow
+
+Candidate JSON
+       │
+       ▼
+Feature Extraction
+       │
+       ▼
+6-Dimensional Scoring
+       │
+       ▼
+Availability Multiplier
+       │
+       ▼
+Honeypot Detection
+       │
+       ▼
+Top 100 Ranked Candidates
+       │
+       ▼
+CSV/XLSX Output
+
+---
+
 # Dataset
 
 Input:
@@ -51,27 +75,6 @@ Top 100 ranked candidates in CSV/XLSX format.
 
 ---
 
-# System Workflow 
-
-Candidate JSON
-       │
-       ▼
-Feature Extraction
-       │
-       ▼
-6-Dimensional Scoring
-       │
-       ▼
-Availability Multiplier
-       │
-       ▼
-Honeypot Detection
-       │
-       ▼
-Top 100 Ranked Candidates
-       │
-       ▼
-CSV/XLSX Output
 
 # Scoring Architecture
 
