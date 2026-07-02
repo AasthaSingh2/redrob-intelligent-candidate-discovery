@@ -1,4 +1,4 @@
-Overview
+ # Overview
 
 Redrob Intelligent Candidate Discovery is an explainable AI-powered ranking engine designed to recommend the Top 100 candidates from a pool of 100,000 profiles for a Senior AI Engineer role.
 
@@ -6,7 +6,9 @@ Instead of relying solely on keyword matching, the engine evaluates candidates u
 
 The entire solution is implemented using only the Python Standard Library and executes completely offline, satisfying all challenge constraints.
 
-Problem Statement
+---
+
+# Problem Statement
 
 Traditional resume search systems struggle to identify genuinely qualified candidates because they primarily rely on exact keyword matching.
 
@@ -20,7 +22,9 @@ Meanwhile,
 
 This project addresses that challenge through a hybrid scoring engine that evaluates candidates the way an experienced recruiter would.
 
-Key Features
+---
+
+# Key Features
 Rank 100,000 candidate profiles efficiently
 Fully explainable scoring engine
 Multi-dimensional candidate evaluation
@@ -32,7 +36,10 @@ Honeypot profile detection
 Human-readable reasoning for every ranked candidate
 Pure Python Standard Library implementation
 Offline execution (No Internet, No GPU)
-System Workflow
+
+---
+
+# System Workflow
 Candidate Profiles (.jsonl / .jsonl.gz)
                 │
                 ▼
@@ -55,7 +62,10 @@ Candidate Profiles (.jsonl / .jsonl.gz)
                 │
                 ▼
        CSV Submission
-Scoring Architecture
+
+       ----
+       
+# Scoring Architecture
 
 The final ranking score is computed as:
 
@@ -71,7 +81,10 @@ This design ensures that:
 
 Wrong-role candidates are heavily suppressed.
 Strong but slightly inactive candidates are down-weighted rather than eliminated.
-Candidate Evaluation Dimensions
+
+---
+
+# Candidate Evaluation Dimensions
 Component	Weight	Description
 Career Quality	30%	Production systems, company quality, measurable impact
 Skill Depth	22%	Technical expertise, endorsements, duration
@@ -79,7 +92,10 @@ Behavioral Signals	20%	Recruiter engagement and hiring readiness
 Title Fit	18%	Alignment with Senior AI Engineer role
 Education	3%	Institution, degree, specialization
 Location	2%	Preferred hiring locations
-Career Quality
+
+---
+
+# Career Quality
 
 The engine evaluates career history using:
 
@@ -94,7 +110,9 @@ Career stability
 
 Rather than counting keywords, it searches for meaningful engineering signals throughout the candidate's work history.
 
-Skill Evaluation
+---
+
+# Skill Evaluation
 
 Skills are evaluated using three factors:
 
@@ -113,7 +131,10 @@ Recommendation Systems
 Python
 Evaluation Metrics
 Retrieval-Augmented Generation (RAG)
-Behavioral Signals
+
+---
+
+# Behavioral Signals
 
 The ranking engine considers hiring readiness using recruiter signals such as:
 
@@ -128,7 +149,9 @@ Recruiter saves
 
 These signals help prioritize candidates who are both technically strong and realistically available.
 
-Honeypot Detection
+---
+
+# Honeypot Detection
 
 The engine detects suspicious profiles by identifying patterns such as:
 
@@ -138,7 +161,9 @@ Unrealistic combinations of unrelated technical stacks
 
 Detected honeypot profiles receive a near-zero score and are excluded from the final ranking.
 
-Explainable Reasoning
+---
+
+# Explainable Reasoning
 
 Each recommended candidate includes a concise explanation generated from their actual profile.
 
@@ -148,7 +173,9 @@ Built a production semantic search platform serving millions of users at a leadi
 
 This makes every ranking transparent and recruiter-friendly.
 
-Performance
+---
+
+# Performance
 Metric	Value
 Candidate Pool	100,000
 Runtime	~4 minutes
@@ -156,7 +183,10 @@ Internet Required	No
 GPU Required	No
 Dependencies	None
 Validation	✅ Passed
-Project Structure
+
+---
+
+# Project Structure
 redrob-intelligent-candidate-discovery/
 │
 ├── rank.py
@@ -168,7 +198,10 @@ redrob-intelligent-candidate-discovery/
 ├── docs/
 │   └── Redrob_Candidate_Discovery.pdf
 │
-Running the Project
+
+---
+
+# Running the Project
 python rank.py --candidates candidates.jsonl --out my_team.csv
 
 Validate the submission:
@@ -178,7 +211,10 @@ python validate_submission.py my_team.csv
 Expected output:
 
 Submission is valid.
-Future Improvements
+
+---
+
+# Future Improvements
 
 Potential enhancements include:
 
@@ -188,7 +224,10 @@ Interactive recruiter dashboard
 Real-time multi-job ranking
 Feedback-driven learning
 Resume parsing from PDF documents
-Author
+
+---
+
+# Author
 
 Aastha Singh
 
