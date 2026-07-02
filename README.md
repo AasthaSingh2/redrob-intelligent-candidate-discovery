@@ -201,19 +201,39 @@ redrob-intelligent-candidate-discovery/
 
 ---
 
-# Running the Project
+## 🚀 Running the Project
 
+### 1. Rank the Candidates
+
+```bash
 python rank.py --candidates candidates.jsonl --out my_team.csv
+```
 
-Validate the submission:
+### 2. Validate the Submission
 
-----python validate_submission.py my_team.csv
+```bash
+python validate_submission.py my_team.csv
+```
 
-Expected output:
+### Expected Output
+
+```text
+🔍 Redrob Intelligent Candidate Ranker v3
+   Input:  candidates.jsonl
+   Output: my_team.csv
+
+✅ Scored 100000 candidates (21 honeypots detected)
+
+📊 Top 100 stats:
+   Score range: 0.8643 → 0.7126
+
+✅ Written: my_team.csv
+
+✅ Done. Run:
+python validate_submission.py my_team.csv
 
 Submission is valid.
-
----
+```
 
 # Future Improvements
 
