@@ -63,7 +63,6 @@ Candidate Profiles (.jsonl / .jsonl.gz)
                 ▼
        CSV Submission
 
-       ---
        
 # Scoring Architecture
 
