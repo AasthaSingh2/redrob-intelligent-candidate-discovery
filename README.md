@@ -1,345 +1,144 @@
 # Redrob Intelligent Candidate Discovery
 
-An explainable AI-powered candidate ranking system built for the **Redrob Data & AI Challenge**.
 
-The system ranks 100,000 candidate profiles against a Senior AI/ML Retrieval Engineer Job Description using a multi-dimensional scoring engine instead of simple keyword matching.
+AI-powered candidate ranking for the Redrob Data & AI Challenge.
+Ranks 100,000 candidate profiles against a Senior AI Engineer JD — the way a great recruiter would, not a keyword filter.
 
----
 
-# Overview
+
+
+# The Problem
 
 Traditional keyword search cannot distinguish between:
 
-- An HR Manager with AI keywords
-- A real ML Engineer with production retrieval experience
 
-This project solves that problem using an explainable hybrid ranking algorithm that evaluates:
+An HR Manager who listed "FAISS" and "Pinecone" in their skills
+A real ML Engineer who shipped a production RAG pipeline serving 50M+ queries/month
 
-- Role fit
-- Skill depth
-- Career quality
-- Education
-- Behavioral signals
-- Location preference
 
-Each candidate receives:
+This project solves that using an explainable hybrid scoring engine that understands role fit, skill depth, career quality, behavioral availability, and semantic intent — not just keyword presence.
 
-- Final ranking score
-- Rank
-- Human-readable reasoning explaining why they were selected
-
----
-
-# System Workflow
-
-Candidate JSON
-       │
-       ▼
-Feature Extraction
-       │
-       ▼
-6-Dimensional Scoring
-       │
-       ▼
-Availability Multiplier
-       │
-       ▼
-Honeypot Detection
-       │
-       ▼
-Top 100 Ranked Candidates
-       │
-       ▼
-CSV/XLSX Output
-
----
-
-# Dataset
-
-Input:
-
-- candidates.jsonl
-- 100,000 candidate profiles
-
-Each profile contains:
-
-- Profile information
-- Skills
-- Career history
-- Education
-- Redrob behavioral signals
-
-Output:
-
-Top 100 ranked candidates in CSV/XLSX format.
-
----
-
-
-# Scoring Architecture
-
-The ranking engine combines multiple scoring dimensions.
-
-| Component | Weight |
-|-----------|--------|
-| Title & Role Fit | 20% |
-| Skill Depth | 24% |
-| Career Quality | 28% |
-| Education | 5% |
-| Behavioral Signals | 18% |
-| Location Preference | 5% |
-
-The final score is multiplied by an **Availability Multiplier**, ensuring inactive candidates do not rank highly.
-
-Final Score = Base Score × Availability Multiplier
-
----
-
-# Candidate Evaluation
-
-## 1. Title Fit
-
-The algorithm first checks whether the candidate is actually suitable for the role.
-
-Preferred titles include:
-
-- Machine Learning Engineer
-- AI Engineer
-- NLP Engineer
-- Search Engineer
-- Recommendation Systems Engineer
-- Applied Scientist
-
-Wrong roles such as HR Manager, Accountant, Marketing Manager, Frontend Developer, etc. receive a heavy penalty.
-
----
-
-## 2. Skill Depth
-
-Instead of counting keywords, every skill receives a depth score based on:
-
-- proficiency level
-- endorsements
-- months of experience
-
-Important skills include:
-
-- FAISS
-- Pinecone
-- Weaviate
-- Qdrant
-- Milvus
-- Elasticsearch
-- OpenSearch
-- Semantic Search
-- Embeddings
-- Ranking
-- Retrieval
-- Python
-- Learning to Rank
-
-Keyword stuffing is automatically penalized.
-
----
-
-## 3. Career Quality
-
-Career quality evaluates:
-
-- Production AI systems
-- Tier-1 product companies
-- Quantified impact
-- Recommendation systems
-- Search systems
-- Retrieval pipelines
-- RAG implementations
-- AI project descriptions
-- Years of experience
-- Job stability
-
-Candidates with real production ML experience receive significantly higher scores.
-
----
-
-## 4. Education
-
-Education contributes a small score based on:
-
-- Institute tier
-- Degree
-- Field of study
-
-Because the Job Description focuses primarily on experience, education has a low overall weight.
-
----
-
-## 5. Behavioral Signals
-
-Behavioral signals measure hireability rather than technical ability.
-
-Signals include:
-
-- Open to Work
-- Recruiter response rate
-- Last active date
-- GitHub activity
-- Interview completion
-- Profile completeness
-- Skill assessments
-- Notice period
-
-These are combined into an Availability Multiplier.
-
----
-
-## 6. Location Preference
-
-Candidates located in preferred hiring cities receive additional score.
-
-Preferred locations include:
-
-- Bengaluru
-- Hyderabad
-- Pune
-- Noida
-- Gurugram
-- Mumbai
-- Delhi
-
-Candidates willing to relocate receive partial credit.
-
----
-
-# Availability Multiplier
-
-Strong candidates who are inactive should not rank above active candidates.
-
-Availability is calculated using:
-
-- Last active date
-- Open-to-work status
-- Recruiter response rate
-
-This multiplier reduces scores for inactive candidates.
-
----
-
-# Honeypot Detection
-
-The ranker explicitly detects misleading candidate profiles.
-
-Examples include:
-
-- Keyword stuffing
-- Impossible skill combinations
-- Expert skills with zero experience
-- Ghost candidates
-- Wrong job titles
-- Wrong technical domain
-
-Detected honeypots receive large penalties or near-zero scores.
-
----
-
-# Explainable Ranking
-
-Each selected candidate includes a generated explanation summarizing:
-
-- Current role
-- Company
-- Years of experience
-- Relevant AI work
-- Production achievements
-- Recruiter responsiveness
-- Availability
-
-Example:
-
-> Built a RAG-based ranking pipeline serving 50M+ queries/month at Razorpay (6.7 years as Lead AI Engineer). Open to work, 73% recruiter response rate, active recently.
-
----
-
-# Project Structure
-
-```
-redrob-submission/
-
-│
-├── candidates.jsonl
-├── rank.py
-├── validate_submission.py
-├── my_team.csv
-└── README.md
-```
-
----
 
 # How to Run
 
-Run the ranking algorithm:
-
-```bash
+bash# Run the ranker (100K candidates, ~4 min on CPU, no GPU, no internet)
 python rank.py --candidates candidates.jsonl --out my_team.csv
-```
 
-Validate the submission:
+# Also works with gzipped input
+python rank.py --candidates candidates.jsonl.gz --out my_team.csv
 
-```bash
+# Validate before submitting
 python validate_submission.py my_team.csv
-```
+# → Submission is valid.
 
-Expected output:
+Requirements: Python 3.8+ standard library only. No pip install needed.
 
-```
-Submission is valid.
-```
 
----
+# Scoring Architecture (v3)
 
-# Output Format
+Final Score = Base Score × title_gate × availability_multiplier
 
-The generated CSV contains:
+Base Score = Career(30%) + Skills(22%) + Title(18%) + Behavior(20%) + Education(3%) + Location(2%)
 
-| candidate_id | rank | score | reasoning |
-|--------------|------|--------|-----------|
+title_gate         = 0.15 + 0.85 × title_score        ← suppresses wrong-role candidates
+availability_mult  = 0.75 + 0.25 × availability_raw   ← down-weights, doesn't destroy
 
-The top 100 candidates are sorted by descending score.
+Scoring Dimensions
 
----
+ComponentWeightWhat It MeasuresCareer Depth30%Company tier, production evidence, semantic search/ranking intent in descriptions, quantified impactSkill Depth22%Fuzzy-matched skills with depth score (proficiency × endorsements × duration)Title & Role Fit18%Correct ML/AI/NLP/Search title — also acts as a gate on total scoreBehavioral Signals20%Response rate, recency, GitHub activity, notice period, interview completionEducation3%Institution tier, degree level, field of studyLocation2%Preferred cities (Pune/Noida/Hyderabad/Bangalore/Mumbai/Delhi)
 
-# Performance
 
-- Dataset Size: 100,000 candidates
-- Runtime: ~3–4 minutes (CPU)
-- Dependencies: Python Standard Library only
-- Internet Required: No
-- GPU Required: No
+Key Design Decisions
 
----
+1. Fuzzy Skill Matching (not exact set lookup)
 
-# Features
+python# Old (v1/v2): exact match — misses "Sentence-Transformers", "sentence_transformers"
+if skill_name in RETRIEVAL_SKILLS:
 
-- Explainable candidate ranking
-- Hybrid scoring model
-- Production-aware career evaluation
-- Skill depth analysis
-- Behavioral signal integration
-- Honeypot detection
-- Availability-aware ranking
-- Offline execution
-- Validator compatible output
+# New (v3): substring match — catches all variants
+def fuzzy_match(text, keywords):
+    return any(kw in text.lower() for kw in keywords)
 
----
+2. Semantic Intent Detection
 
-# Submission
+Searches headline, summary, and all career descriptions for search/ranking/recommendation concepts — not just the skills field. Catches candidates who built real retrieval systems but never explicitly listed "FAISS" or "Pinecone".
 
-This repository contains:
+Gated by technical title to prevent false positives (SEO content writers whose prose contains "ranked on page 1 of search results" don't get credit).
 
-- Source code
-- Ranking algorithm
-- Submission output
-- Documentation
+3. Title Gate (the most important fix)
 
-Prepared for the **Redrob Data & AI Challenge**.
+A wrong-role candidate (HR Manager, Accountant, Frontend Developer) receives title_score = 0.05. Without a gate, they could still rank high if career/behavioral scores are strong.
 
-## - AASTHA SINGH 
+The title gate (0.15 + 0.85 × title_score) is applied to the entire base score, not just an 18% slice — so a wrong-role candidate's total is suppressed to ~19% of what it would otherwise be.
+
+4. Softened Availability Multiplier
+
+# v1/v2: final = base × availability  → ghost candidate (avail=0.2) → 80% penalty
+# v3:    final = base × (0.75 + 0.25 × availability)  → same ghost → 20% penalty
+
+The JD says to "down-weight" inactive candidates, not eliminate them. A Senior ML Engineer inactive for 3 months is still a better hire than an active HR Manager.
+
+5. Honeypot Detection
+
+21 honeypots detected across 100,000 candidates:
+
+
+Expert proficiency + 0 duration_months on 3+ skills (impossible)
+5+ expert skills with 0 endorsements each (impossible on a real profile)
+AI skill bolted onto frontend/devops stack with only 1 AI skill group showing depth
+
+
+All honeypots scored 0.0001 — kept out of top 100.
+
+6. Company Normalization
+
+python"Google India" → "google"
+"Google LLC"   → "google"
+"Amazon Web Services" → "amazon"
+"Meta Platforms" → "meta"
+
+Prevents false negatives on real Tier-1 experience.
+
+
+Output Format
+
+csvcandidate_id,rank,score,reasoning
+CAND_0081846,1,0.8643,"Built a RAG-based ranking pipeline serving 50M+ queries per month for an internal recruiter-facing search product at Razorpay (6.7 yrs as Lead AI Engineer). Open to work; 73% recruiter response rate; active recently; 30d notice; based in Bangalore."
+CAND_0018499,2,0.8563,"Built a RAG-based ranking pipeline serving 50M+ queries per month for an internal recruiter-facing search product at Zomato (7.2 yrs as Senior ML Engineer). ..."
+...
+
+Top 100 candidates ranked by descending score. Each row includes a specific, quantified reasoning sentence extracted from the candidate's actual career description — not a template.
+
+
+Results (on 100K candidate pool)
+
+MetricValueTop-1 score0.8643Score range (top 100)0.8643 → 0.7126Avg title fit (top 100)1.000Avg skill depth (top 100)0.723Avg availability× (top 100)0.921Honeypots detected21Runtime (100K, CPU)~4 minutesValidation✅ Submission is valid
+
+Top-1 candidate: Lead AI Engineer at Razorpay — built RAG-based ranking pipeline serving 50M+ queries/month, active, 30-day notice, strong recruiter response rate.
+
+
+ # Project Structure
+
+redrob-submission/
+├── rank.py                  ← Main ranking engine (v3)
+├── validate_submission.py   ← Official format validator
+├── candidates.jsonl         ← 100K candidate pool (not in repo — too large)
+├── my_team.csv              ← Submission output (top 100 ranked candidates)
+└── README.md
+
+
+What Doesn't Work (and Why We Didn't Do It)
+
+
+LLM/API calls at ranking time — not allowed (no network during ranking per submission spec)
+Vector embeddings — would require a model download, violating the pure-stdlib constraint
+Neural learning-to-rank — no training labels available; would need recruiter feedback data
+
+
+The pure rule-based + fuzzy semantic approach is appropriate given the constraints. For a production system, you'd add LLM re-ranking of the top-500 shortlist as a second pass.
+
+
+Author
+
+Aastha Singh
+Submitted for the Redrob Data & AI Challenge — Intelligent Candidate Discovery Track
