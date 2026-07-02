@@ -63,7 +63,7 @@ Candidate Profiles (.jsonl / .jsonl.gz)
                 ▼
        CSV Submission
 
-       ----
+       ---
        
 # Scoring Architecture
 
@@ -202,11 +202,12 @@ redrob-intelligent-candidate-discovery/
 ---
 
 # Running the Project
+
 python rank.py --candidates candidates.jsonl --out my_team.csv
 
 Validate the submission:
 
-python validate_submission.py my_team.csv
+----python validate_submission.py my_team.csv
 
 Expected output:
 
